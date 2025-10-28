@@ -10,6 +10,7 @@ from routes import bottle, prescription, progress, schedule
 from services.mcp_orchestrator import orchestrator
 scheduler = BackgroundScheduler()
 
+allow_origins=["http://localhost:3000", "exp://*", "https://yourapp.com"]
 
 def _tick_demo_reminders() -> None:
     """Simulate reminder dispatches so the demo shows activity."""
@@ -49,3 +50,11 @@ app.include_router(prescription.router)
 app.include_router(schedule.router)
 app.include_router(bottle.router)
 app.include_router(progress.router)
+
+@app.get("/")
+def read_root():
+    return {"status": "Backend is running ✅", "message": "Welcome to Auto Medicine Reminder API"}
+
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
