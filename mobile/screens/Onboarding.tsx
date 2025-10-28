@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 
 import { useAppStore } from "../services/store";
@@ -16,16 +16,24 @@ export default function Onboarding({ navigation }: Props) {
   const [sleepTime, setSleepTime] = useState("22:30");
 
   const handleContinue = async () => {
-    const user = {
-      id: `user-${Date.now()}`,
-      name,
-      age,
-      wakeTime,
-      sleepTime,
-    };
-    setUser(user);
-    await saveObject("user", user);
-    navigation.navigate("PrescriptionUpload");
+    try {
+      const user = {
+        id: `user-${Date.now()}`,
+        name,
+        age,
+        wakeTime,
+        sleepTime,
+      };
+      setUser(user);
+      await saveObject("user", user);
+      navigation.navigate("PrescriptionUpload");
+    } catch (error) {
+      console.warn("Failed to persist user profile", error);
+      Alert.alert(
+        "Could not save profile",
+        "We could not encrypt your profile locally. Please retry."
+      );
+    }
   };
 
   return (
@@ -99,4 +107,3 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
 });
-

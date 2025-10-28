@@ -25,15 +25,19 @@ Notifications.setNotificationHandler({
 export default function App() {
   useEffect(() => {
     const requestPermission = async () => {
-      const settings = await Notifications.getPermissionsAsync();
-      if (!settings.granted) {
-        await Notifications.requestPermissionsAsync();
-      }
-      if (Platform.OS === "android") {
-        await Notifications.setNotificationChannelAsync("default", {
-          name: "Medication Reminders",
-          importance: Notifications.AndroidImportance.MAX,
-        });
+      try {
+        const settings = await Notifications.getPermissionsAsync();
+        if (!settings.granted) {
+          await Notifications.requestPermissionsAsync();
+        }
+        if (Platform.OS === "android") {
+          await Notifications.setNotificationChannelAsync("default", {
+            name: "Medication Reminders",
+            importance: Notifications.AndroidImportance.MAX,
+          });
+        }
+      } catch (error) {
+        console.warn("Notification setup failed", error);
       }
     };
     requestPermission();
