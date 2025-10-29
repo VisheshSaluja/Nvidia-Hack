@@ -3,10 +3,15 @@ from pydantic import BaseModel
 from sqlmodel import Session
 
 from database import get_session
+from dependencies import verify_client_key
 from services.mcp_orchestrator import orchestrator
 
 
-router = APIRouter(prefix="/prescription", tags=["prescription"])
+router = APIRouter(
+    prefix="/prescription",
+    tags=["prescription"],
+    dependencies=[Depends(verify_client_key)],
+)
 
 
 class PrescriptionResponse(BaseModel):

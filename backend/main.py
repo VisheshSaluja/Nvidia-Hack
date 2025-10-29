@@ -2,12 +2,15 @@ from contextlib import asynccontextmanager
 from typing import AsyncIterator
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import create_db_and_tables
 from routes import bottle, prescription, progress, schedule
 from services.mcp_orchestrator import orchestrator
+
+load_dotenv()
 scheduler = BackgroundScheduler()
 
 allow_origins=["http://localhost:3000", "exp://*", "https://yourapp.com"]

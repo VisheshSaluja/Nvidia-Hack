@@ -6,6 +6,9 @@ import { fallbackBottle, fallbackPrescription, fallbackProgress, fallbackSchedul
 const client = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL || "http://127.0.0.1:8000",
   timeout: 8000,
+  headers: {
+    "x-client-key": process.env.EXPO_PUBLIC_CLIENT_API_KEY ?? "",
+  },
 });
 
 export type ApiResult<T> = { data: T; source: "api" | "fallback" };

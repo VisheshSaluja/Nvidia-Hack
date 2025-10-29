@@ -20,6 +20,7 @@ cd backend
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+cp ../.env.example ../.env  # configure secrets shared by backend + mobile
 uvicorn main:app --reload
 ```
 
@@ -29,6 +30,15 @@ cd mobile
 npm install
 EXPO_PUBLIC_API_URL=http://127.0.0.1:8000 npx expo start
 ```
+
+### Environment variables
+Populate a `.env` file in the project root (copy from `.env.example`) and fill in:
+- `AUTO_MEDICINE_CLIENT_KEY` / `EXPO_PUBLIC_CLIENT_API_KEY`: shared secret that secures mobile → backend calls.
+- `AUTO_MEDICINE_FERNET_KEY`: optional Fernet key for deterministic encryption at rest.
+- `NIM_API_KEY`, `NIM_BASE_URL`: credentials for the NVIDIA Nemotron NIM endpoint when swapping out the simulators.
+- `MCP_BASE_URL`, `MCP_API_KEY`: MCP orchestrator endpoint and token.
+- `EXPO_PUBLIC_API_URL`: URL the Expo client should target (development defaults to `http://127.0.0.1:8000`).
+- `EXPO_PUBLIC_FIREBASE_API_KEY`, `EXPO_PUBLIC_FIREBASE_PROJECT_ID`: Firebase keys once Google Sign-In is enabled.
 
 ## Demo Flow
 1. Complete onboarding (profile + routine).

@@ -14,12 +14,19 @@ cd backend
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+cp ../.env.example ../.env  # edit secrets before running
 ```
 
 Create a `.env` file if you want deterministic encryption keys:
 ```
 AUTO_MEDICINE_FERNET_KEY=<base64_fernet_key>
 ```
+
+Required environment variables:
+- `AUTO_MEDICINE_CLIENT_KEY`: shared secret expected in the `x-client-key` header from the mobile client.
+- `AUTO_MEDICINE_FERNET_KEY`: optional Fernet key for deterministic encryption.
+- `NIM_API_KEY` / `NIM_BASE_URL`: optional NVIDIA NIM credentials when replacing simulators.
+- `MCP_BASE_URL` / `MCP_API_KEY`: optional MCP orchestrator endpoint + token.
 
 ## Run
 ```bash

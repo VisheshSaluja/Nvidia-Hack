@@ -5,10 +5,15 @@ from pydantic import BaseModel, Field
 from sqlmodel import Session
 
 from database import get_session
+from dependencies import verify_client_key
 from services.mcp_orchestrator import orchestrator
 
 
-router = APIRouter(prefix="/schedule", tags=["schedule"])
+router = APIRouter(
+    prefix="/schedule",
+    tags=["schedule"],
+    dependencies=[Depends(verify_client_key)],
+)
 
 
 class ScheduleRequest(BaseModel):

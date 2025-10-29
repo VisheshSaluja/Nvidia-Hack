@@ -3,10 +3,15 @@ from pydantic import BaseModel
 from sqlmodel import Session
 
 from database import get_session
+from dependencies import verify_client_key
 from services.mcp_orchestrator import orchestrator
 
 
-router = APIRouter(prefix="/bottle", tags=["bottle"])
+router = APIRouter(
+    prefix="/bottle",
+    tags=["bottle"],
+    dependencies=[Depends(verify_client_key)],
+)
 
 
 class BottleVerificationResponse(BaseModel):

@@ -5,10 +5,15 @@ from pydantic import BaseModel
 from sqlmodel import Session
 
 from database import get_session
+from dependencies import verify_client_key
 from services.mcp_orchestrator import orchestrator
 
 
-router = APIRouter(prefix="/progress", tags=["progress"])
+router = APIRouter(
+    prefix="/progress",
+    tags=["progress"],
+    dependencies=[Depends(verify_client_key)],
+)
 
 
 class ProgressEntry(BaseModel):
