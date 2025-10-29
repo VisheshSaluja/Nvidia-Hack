@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 
 import CameraUploader from "../components/CameraUploader";
@@ -19,10 +19,22 @@ export default function BottleVerification({ navigation }: Props) {
 
   const handleBottle = async (uri: string) => {
     if (!user) {
+      Alert.alert("Profile missing", "Please complete onboarding first.");
       return;
     }
-    const response = await verifyBottle(user.id, uri);
-    setResult(response);
+    try {
+      const response = await verifyBottle(user.id, uri);
+      setResult(response.data);
+      if (response.source === "fallback") {
+        Alert.alert(
+          "Demo verification",
+          "Using offline bottle check data. Start the backend for live verification."
+        );
+      }
+    } catch (error) {
+      console.warn("Bottle verification failed", error);
+      Alert.alert("Verification failed", "Please try scanning the bottle again.");
+    }
   };
 
   const goToProgress = () => {
@@ -81,4 +93,3 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
 });
-

@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { Button, Card, Divider, List } from "react-native-paper";
 
 import ProgressChart from "../components/ProgressChart";
@@ -24,12 +24,20 @@ export default function ProgressDashboard({}: Props) {
       if (!user) {
         return;
       }
-      const response = await fetchProgress(user.id);
-      setStats({
-        adherence: response.adherence,
-        refill_prediction: response.refill_prediction,
-      });
-      setAdherence(response.events);
+      try {
+        const response = await fetchProgress(user.id);
+        setStats({ adherence: response.data.adherence, refill_prediction: response.data.refill_prediction });
+        setAdherence(response.data.events);
+        if (response.source === "fallback") {
+          Alert.alert(
+            "Demo stats",
+            "Using offline adherence data. Start the backend to sync real progress."
+          );
+        }
+      } catch (error) {
+        console.warn("Progress load failed", error);
+        Alert.alert("Unable to load progress", "Please try again shortly.");
+      }
     };
     load();
   }, [user, setAdherence]);

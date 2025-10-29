@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Button, Card, Text } from "react-native-paper";
 
 import CameraUploader from "../components/CameraUploader";
@@ -17,13 +17,29 @@ export default function PrescriptionUpload({ navigation }: Props) {
 
   const handleUpload = async (uri: string) => {
     if (!user) {
+      Alert.alert("Profile missing", "Please complete onboarding first.");
       return;
     }
-    setLoading(true);
-    const payload = await uploadPrescription(user.id, uri);
-    setLoading(false);
-    setExtracted(payload);
-    setPrescription(payload);
+    try {
+      setLoading(true);
+      const result = await uploadPrescription(user.id, uri);
+      setExtracted(result.data);
+      setPrescription(result.data);
+      if (result.source === "fallback") {
+        Alert.alert(
+          "Demo data used",
+          "Using offline prescription data. Start the backend to enable live parsing."
+        );
+      }
+    } catch (error) {
+      console.warn("Prescription upload failed", error);
+      Alert.alert(
+        "Upload failed",
+        "We could not read the prescription. Please retry with a clearer photo."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleContinue = () => {
@@ -63,25 +79,9 @@ export default function PrescriptionUpload({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    padding: 24,
-    gap: 16,
-  },
-  loader: {
-    marginVertical: 12,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  key: {
-    fontWeight: "600",
-    textTransform: "capitalize",
-  },
-  next: {
-    marginTop: 24,
-  },
+  container: { flexGrow: 1, padding: 24, gap: 16 },
+  loader: { marginVertical: 12 },
+  row: { flexDirection: "row", justifyContent: "space-between", marginBottom: 8 },
+  key: { fontWeight: "600", textTransform: "capitalize" },
+  next: { marginTop: 24 },
 });
-

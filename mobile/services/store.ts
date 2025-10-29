@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type UserProfile = {
+export type UserProfile = {
   id: string;
   name: string;
   age: string;
@@ -8,9 +8,9 @@ type UserProfile = {
   sleepTime?: string;
 };
 
-type Prescription = Record<string, string>;
+export type Prescription = Record<string, string>;
 
-type ScheduleItem = {
+export type ScheduleItem = {
   time: string;
   medicine: string;
   dose: string;
@@ -18,7 +18,7 @@ type ScheduleItem = {
   reminderCopy?: string;
 };
 
-type AdherenceEntry = {
+export type AdherenceEntry = {
   status: string;
   recorded_at: string;
 };
@@ -42,4 +42,3 @@ export const useAppStore = create<AppState>((set) => ({
   setSchedule: (items) => set({ schedule: items }),
   setAdherence: (events) => set({ adherence: events }),
 }));
-
